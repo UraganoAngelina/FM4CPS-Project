@@ -1,0 +1,40 @@
+import "../Plant/events.cif";
+
+requirement R1:
+  location door_closed:
+    initial;
+    marked;
+
+    // Movimento permesso solo in questo stato
+    edge up goto door_closed;
+    edge down goto door_closed;
+
+    // Eventi di arrivo sempre permessi
+    edge arrive_0 goto door_closed;
+    edge arrive_1 goto door_closed;
+    edge arrive_2 goto door_closed;
+
+    // Porta si apre -> movimento bloccato
+    edge openr goto door_open;
+
+    // Pulsanti sempre permessi
+    edge press_0 goto door_closed;
+    edge press_1 goto door_closed;
+    edge press_2 goto door_closed;
+
+  location door_open:
+    marked;
+
+    // Eventi di arrivo sempre permessi
+    edge arrive_0 goto door_open;
+    edge arrive_1 goto door_open;
+    edge arrive_2 goto door_open;
+
+    // Porta si chiude -> movimento permesso di nuovo
+    edge close goto door_closed;
+
+    // Pulsanti sempre permessi
+    edge press_0 goto door_open;
+    edge press_1 goto door_open;
+    edge press_2 goto door_open;
+end

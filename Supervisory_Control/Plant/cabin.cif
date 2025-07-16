@@ -1,0 +1,65 @@
+import "events.cif";
+
+// Cabin automaton - can move between 3 floors
+plant cabin:
+    location ground:
+        initial;
+        marked;
+        edge up goto up_from_0;
+
+    location up_from_0:
+        edge arrive_1 goto floor1;
+
+    location floor1:
+        marked;
+        edge up  goto up_from_1;
+        edge down goto down_from_1;
+
+    location up_from_1:
+        edge arrive_2 goto floor2;
+
+    location down_from_1:
+        edge arrive_0 goto ground;
+
+    location floor2:
+        marked;
+        edge down goto down_from_2;
+
+     location down_from_2:
+        edge arrive_1 goto floor1;
+end
+
+svgfile "../generated/elevator_svg.svg";
+
+// Posizione della cabina - movimento verticale tra i piani
+svgout id "cabin" attr "transform" value
+  if cabin.ground: "translate(0, 0)"
+  elif cabin.floor1: "translate(0, -150)"
+  elif cabin.floor2: "translate(0, -300)"
+  elif cabin.up_from_0: "translate(0, -75)"
+  elif cabin.up_from_1: "translate(0, -225)"
+  elif cabin.down_from_1: "translate(0, -75)"
+  elif cabin.down_from_2: "translate(0, -225)"
+  else "translate(0, 0)"
+end;
+
+// Aggiorna il testo della posizione nel pannello di controllo
+svgout id "cabin_position_text" attr "textContent" value
+  if cabin.ground: "Ground"
+  elif cabin.floor1: "Floor 1"
+  elif cabin.floor2: "Floor 2"
+  else "Moving"
+end;
+
+// Colore della cabina per indicare movimento
+svgout id "cabin" attr "fill" value
+  if cabin.up_from_0 or cabin.up_from_1: "#4CAF50"
+  elif cabin.down_from_1 or cabin.down_from_2: "#FF9800"
+  else "#2196F3"
+end;
+
+svgout id "up_button" attr "opacity" value
+  if cabin.up_from_0 or cabin.up_from_1: "1.0" else "0.5" end;
+
+svgout id "down_button" attr "opacity" value
+  if cabin.down_from_1 or cabin.down_from_2: "1.0" else "0.5" end;

@@ -1,0 +1,40 @@
+import "events.cif";
+// Door automaton - can be open or closed
+plant door:
+    location closed:
+        initial;
+        marked;
+        edge openr goto open;
+
+    location open:
+        edge close goto closed;
+end
+
+svgfile "../generated/elevator_svg.svg";
+
+// State della porta - colore e aspetto
+svgout id "door" attr "fill" value
+  if door.open: "#8B4513" else "#654321" end;
+
+// Update il testo dello stato porta nel pannello
+svgout id "door_status_text" attr "textContent" value
+  if door.open: "Open" else "Closed" end;
+
+// Colore del testo dello stato porta
+svgout id "door_status_text" attr "fill" value
+  if door.open: "#4CAF50" else "#F44336" end;
+
+// Indicator visuale sulla porta (pallino giallo)
+svgout id "door_indicator" attr "fill" value
+  if door.open: "#4CAF50" else "#FFC107" end;
+
+// Opacity della porta per effetto apertura
+svgout id "door" attr "opacity" value
+  if door.open: "0.7" else "1.0" end;
+
+
+svgout id "open_button" attr "opacity" value
+  if door.open: "1.0" else "0.5" end;
+
+svgout id "close_button" attr "opacity" value
+  if door.closed: "1.0" else "0.5" end;

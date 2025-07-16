@@ -1,0 +1,1579 @@
+controllable up;
+controllable down;
+controllable openr;
+controllable close;
+uncontrollable press_0;
+uncontrollable press_1;
+uncontrollable press_2;
+uncontrollable arrive_0;
+uncontrollable arrive_1;
+uncontrollable arrive_2;
+plant automaton cabin:
+  location ground:
+    initial;
+    marked;
+    edge up goto up_from_0;
+  location up_from_0:
+    edge arrive_1 goto floor1;
+  location floor1:
+    marked;
+    edge up goto up_from_1;
+    edge down goto down_from_1;
+  location up_from_1:
+    edge arrive_2 goto floor2;
+  location down_from_1:
+    edge arrive_0 goto ground;
+  location floor2:
+    marked;
+    edge down goto down_from_2;
+  location down_from_2:
+    edge arrive_1 goto floor1;
+end
+plant automaton door:
+  location closed:
+    initial;
+    marked;
+    edge openr goto open;
+  location open:
+    edge close goto closed;
+end
+plant automaton button_ground:
+  location not_called:
+    initial;
+    marked;
+    edge press_0 goto called;
+  location called:
+    marked;
+    edge press_0 goto called;
+    edge arrive_0 goto not_called;
+    edge arrive_2 goto called;
+    edge arrive_1 goto called;
+end
+plant automaton button_floor1:
+  location not_called:
+    initial;
+    marked;
+    edge press_1 goto called;
+  location called:
+    marked;
+    edge press_1 goto called;
+    edge arrive_1 goto not_called;
+    edge arrive_0 goto called;
+    edge arrive_2 goto called;
+end
+plant automaton button_floor2:
+  location not_called:
+    initial;
+    marked;
+    edge press_2 goto called;
+  location called:
+    marked;
+    edge press_2 goto called;
+    edge arrive_2 goto not_called;
+    edge arrive_0 goto called;
+    edge arrive_1 goto called;
+end
+supervisor automaton $supervisor:
+  alphabet press_1, arrive_1, arrive_0, arrive_2, press_2, press_0, up, down, openr, close;
+  @state(button_floor1: "not_called", button_floor2: "not_called", button_ground: "not_called", cabin: "ground", door: "closed", R1: "door_closed", R2: "idle")
+  location s1:
+    initial;
+    marked;
+    edge openr goto s2;
+    edge up goto s3;
+    edge press_0 goto s4;
+    edge press_2 goto s5;
+    edge press_1 goto s6;
+  @state(button_floor1: "not_called", button_floor2: "not_called", button_ground: "not_called", cabin: "ground", door: "open", R1: "door_open", R2: "idle")
+  location s2:
+    edge close goto s1;
+    edge press_0 goto s15;
+    edge press_2 goto s11;
+    edge press_1 goto s7;
+  @state(button_floor1: "not_called", button_floor2: "not_called", button_ground: "not_called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "idle")
+  location s3:
+    edge openr goto s19;
+    edge press_0 goto s16;
+    edge press_2 goto s12;
+    edge press_1 goto s8;
+  @state(button_floor1: "not_called", button_floor2: "not_called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_0")
+  location s4:
+    marked;
+    edge openr goto s15;
+    edge up goto s16;
+    edge press_0;
+    edge press_2 goto s17;
+    edge press_1 goto s18;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_2")
+  location s5:
+    marked;
+    edge openr goto s11;
+    edge up goto s12;
+    edge press_0 goto s13;
+    edge press_2;
+    edge press_1 goto s14;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "not_called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_1")
+  location s6:
+    marked;
+    edge openr goto s7;
+    edge up goto s8;
+    edge press_0 goto s9;
+    edge press_2 goto s10;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "not_called", cabin: "ground", door: "open", R1: "door_open", R2: "C_1")
+  location s7:
+    edge close goto s6;
+    edge press_0 goto s23;
+    edge press_2 goto s20;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "not_called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_1")
+  location s8:
+    edge openr goto s25;
+    edge press_0 goto s24;
+    edge press_2 goto s21;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_1")
+  location s9:
+    marked;
+    edge openr goto s23;
+    edge up goto s24;
+    edge press_0;
+    edge press_2 goto s22;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_1")
+  location s10:
+    marked;
+    edge openr goto s20;
+    edge up goto s21;
+    edge press_0 goto s22;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "open", R1: "door_open", R2: "C_2")
+  location s11:
+    edge close goto s5;
+    edge press_0 goto s29;
+    edge press_2;
+    edge press_1 goto s26;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_2")
+  location s12:
+    edge openr goto s31;
+    edge press_0 goto s30;
+    edge press_2;
+    edge press_1 goto s27;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_2")
+  location s13:
+    marked;
+    edge openr goto s29;
+    edge up goto s30;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s28;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_2")
+  location s14:
+    marked;
+    edge openr goto s26;
+    edge up goto s27;
+    edge press_0 goto s28;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "not_called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "C_0")
+  location s15:
+    edge close goto s4;
+    edge press_0;
+    edge press_2 goto s35;
+    edge press_1 goto s32;
+  @state(button_floor1: "not_called", button_floor2: "not_called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_0")
+  location s16:
+    edge openr goto s37;
+    edge press_0;
+    edge press_2 goto s36;
+    edge press_1 goto s33;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_0")
+  location s17:
+    marked;
+    edge openr goto s35;
+    edge up goto s36;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s34;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_0")
+  location s18:
+    marked;
+    edge openr goto s32;
+    edge up goto s33;
+    edge press_0;
+    edge press_2 goto s34;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "not_called", button_ground: "not_called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "idle")
+  location s19:
+    edge close goto s3;
+    edge press_0 goto s37;
+    edge press_2 goto s31;
+    edge press_1 goto s25;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "open", R1: "door_open", R2: "C_1")
+  location s20:
+    edge close goto s10;
+    edge press_0 goto s38;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_1")
+  location s21:
+    edge openr goto s40;
+    edge press_0 goto s39;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_1")
+  location s22:
+    marked;
+    edge openr goto s38;
+    edge up goto s39;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "C_1")
+  location s23:
+    edge close goto s9;
+    edge press_0;
+    edge press_2 goto s38;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_1")
+  location s24:
+    edge openr goto s41;
+    edge press_0;
+    edge press_2 goto s39;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "not_called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_1")
+  location s25:
+    edge close goto s8;
+    edge press_0 goto s41;
+    edge press_2 goto s40;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "open", R1: "door_open", R2: "C_2")
+  location s26:
+    edge close goto s14;
+    edge press_0 goto s42;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_2")
+  location s27:
+    edge openr goto s44;
+    edge press_0 goto s43;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_2")
+  location s28:
+    marked;
+    edge openr goto s42;
+    edge up goto s43;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "C_2")
+  location s29:
+    edge close goto s13;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s42;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_2")
+  location s30:
+    edge openr goto s45;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s43;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_2")
+  location s31:
+    edge close goto s12;
+    edge press_0 goto s45;
+    edge press_2;
+    edge press_1 goto s44;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "C_0")
+  location s32:
+    edge close goto s18;
+    edge press_0;
+    edge press_2 goto s46;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_0")
+  location s33:
+    edge openr goto s48;
+    edge press_0;
+    edge press_2 goto s47;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "C_0")
+  location s34:
+    marked;
+    edge openr goto s46;
+    edge up goto s47;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "C_0")
+  location s35:
+    edge close goto s17;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s46;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_0")
+  location s36:
+    edge openr goto s49;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s47;
+  @state(button_floor1: "not_called", button_floor2: "not_called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_0")
+  location s37:
+    edge close goto s16;
+    edge press_0;
+    edge press_2 goto s49;
+    edge press_1 goto s48;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "C_1")
+  location s38:
+    edge close goto s22;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_1")
+  location s39:
+    edge openr goto s50;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s51;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_1")
+  location s40:
+    edge close goto s21;
+    edge press_0 goto s50;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_1")
+  location s41:
+    edge close goto s24;
+    edge press_0;
+    edge press_2 goto s50;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "C_2")
+  location s42:
+    edge close goto s28;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_2")
+  location s43:
+    edge openr goto s52;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s53;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_2")
+  location s44:
+    edge close goto s27;
+    edge press_0 goto s52;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_2")
+  location s45:
+    edge close goto s30;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s52;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "C_0")
+  location s46:
+    edge close goto s34;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "C_0")
+  location s47:
+    edge openr goto s54;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s55;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_0")
+  location s48:
+    edge close goto s33;
+    edge press_0;
+    edge press_2 goto s54;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_0")
+  location s49:
+    edge close goto s36;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s54;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_1")
+  location s50:
+    edge close goto s39;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s60;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "S_1")
+  location s51:
+    marked;
+    edge openr goto s56;
+    edge down goto s57;
+    edge up goto s58;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s59;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_2")
+  location s52:
+    edge close goto s43;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s61;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "C_2")
+  location s53:
+    marked;
+    edge openr goto s61;
+    edge down goto s62;
+    edge up goto s63;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s64;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "C_0")
+  location s54:
+    edge close goto s47;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s65;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "C_0")
+  location s55:
+    marked;
+    edge openr goto s65;
+    edge down goto s66;
+    edge up goto s67;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s68;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "S_open_1")
+  location s56:
+    edge close goto s74;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s69;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "S_1")
+  location s57:
+    edge openr goto s73;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s70;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "S_1")
+  location s58:
+    edge openr goto s72;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s71;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "S_1")
+  location s59:
+    marked;
+    edge openr goto s69;
+    edge down goto s70;
+    edge up goto s71;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "S_1")
+  location s60:
+    edge close goto s51;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s75;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "C_2")
+  location s61:
+    edge close goto s53;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s76;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "C_2")
+  location s62:
+    edge openr goto s80;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s77;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "C_2")
+  location s63:
+    edge openr goto s79;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s78;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "C_2")
+  location s64:
+    marked;
+    edge openr goto s76;
+    edge down goto s77;
+    edge up goto s78;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "C_0")
+  location s65:
+    edge close goto s55;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s81;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "C_0")
+  location s66:
+    edge openr goto s85;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s82;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "C_0")
+  location s67:
+    edge openr goto s84;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s83;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "C_0")
+  location s68:
+    marked;
+    edge openr goto s81;
+    edge down goto s82;
+    edge up goto s83;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "S_open_1")
+  location s69:
+    edge close goto s90;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "S_1")
+  location s70:
+    edge openr goto s88;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s89;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "S_1")
+  location s71:
+    edge openr goto s86;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s87;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "S_open_1")
+  location s72:
+    edge close goto s91;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s86;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "S_open_1")
+  location s73:
+    edge close goto s92;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s88;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "idle")
+  location s74:
+    marked;
+    edge openr goto s93;
+    edge down goto s92;
+    edge up goto s91;
+    edge press_0 goto s55;
+    edge press_2 goto s53;
+    edge press_1 goto s94;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "S_1")
+  location s75:
+    edge close goto s59;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "C_2")
+  location s76:
+    edge close goto s64;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "C_2")
+  location s77:
+    edge openr goto s97;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s14;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "C_2")
+  location s78:
+    edge openr goto s95;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s96;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "C_2")
+  location s79:
+    edge close goto s63;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s95;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "C_2")
+  location s80:
+    edge close goto s62;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s97;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "C_0")
+  location s81:
+    edge close goto s68;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "C_0")
+  location s82:
+    edge openr goto s100;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s101;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "C_0")
+  location s83:
+    edge openr goto s98;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s99;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "C_0")
+  location s84:
+    edge close goto s67;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s98;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "C_0")
+  location s85:
+    edge close goto s66;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s100;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "S_open_1")
+  location s86:
+    edge close goto s105;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s102;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "S_1")
+  location s87:
+    marked;
+    edge openr goto s102;
+    edge down goto s103;
+    edge press_0;
+    edge press_2 goto s104;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "S_open_1")
+  location s88:
+    edge close goto s109;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s106;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "closed", R1: "door_closed", R2: "S_1")
+  location s89:
+    marked;
+    edge openr goto s106;
+    edge up goto s107;
+    edge press_0 goto s108;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "idle")
+  location s90:
+    marked;
+    edge openr goto s110;
+    edge down goto s109;
+    edge up goto s105;
+    edge press_0 goto s68;
+    edge press_2 goto s64;
+    edge press_1 goto s94;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "idle")
+  location s91:
+    edge openr goto s111;
+    edge press_0 goto s67;
+    edge press_2 goto s63;
+    edge press_1 goto s112;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "idle")
+  location s92:
+    edge openr goto s113;
+    edge press_0 goto s66;
+    edge press_2 goto s62;
+    edge press_1 goto s114;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "idle")
+  location s93:
+    edge close goto s74;
+    edge press_0 goto s65;
+    edge press_2 goto s61;
+    edge press_1 goto s115;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "C_1")
+  location s94:
+    marked;
+    edge openr goto s115;
+    edge down goto s114;
+    edge up goto s112;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "C_2")
+  location s95:
+    edge close goto s78;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s119;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "S_2")
+  location s96:
+    marked;
+    edge openr goto s116;
+    edge down goto s117;
+    edge press_0;
+    edge press_2 goto s118;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "C_2")
+  location s97:
+    edge close goto s77;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s26;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "C_0")
+  location s98:
+    edge close goto s83;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s120;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "C_0")
+  location s99:
+    marked;
+    edge openr goto s120;
+    edge down goto s121;
+    edge press_0;
+    edge press_2 goto s122;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "C_0")
+  location s100:
+    edge close goto s82;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s126;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "closed", R1: "door_closed", R2: "S_0")
+  location s101:
+    marked;
+    edge openr goto s123;
+    edge up goto s124;
+    edge press_0 goto s125;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "S_open_1")
+  location s102:
+    edge close goto s130;
+    edge press_0;
+    edge press_2 goto s127;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "S_1")
+  location s103:
+    edge openr goto s129;
+    edge press_0;
+    edge press_2 goto s128;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "S_1")
+  location s104:
+    marked;
+    edge openr goto s127;
+    edge down goto s128;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "idle")
+  location s105:
+    edge openr goto s131;
+    edge press_0 goto s83;
+    edge press_2 goto s78;
+    edge arrive_2 goto s130;
+    edge press_1 goto s112;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "open", R1: "door_open", R2: "S_open_1")
+  location s106:
+    edge close goto s135;
+    edge press_0 goto s132;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "S_1")
+  location s107:
+    edge openr goto s134;
+    edge press_0 goto s133;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "S_1")
+  location s108:
+    marked;
+    edge openr goto s132;
+    edge up goto s133;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "idle")
+  location s109:
+    edge openr goto s136;
+    edge press_0 goto s82;
+    edge press_2 goto s77;
+    edge arrive_0 goto s135;
+    edge press_1 goto s114;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "idle")
+  location s110:
+    edge close goto s90;
+    edge press_0 goto s81;
+    edge press_2 goto s76;
+    edge press_1 goto s115;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "idle")
+  location s111:
+    edge close goto s91;
+    edge press_0 goto s84;
+    edge press_2 goto s79;
+    edge press_1 goto s137;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "C_1")
+  location s112:
+    edge openr goto s137;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s138;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "idle")
+  location s113:
+    edge close goto s92;
+    edge press_0 goto s85;
+    edge press_2 goto s80;
+    edge press_1 goto s139;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "C_1")
+  location s114:
+    edge openr goto s139;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s10;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "C_1")
+  location s115:
+    edge close goto s94;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "S_open_2")
+  location s116:
+    edge close goto s130;
+    edge press_0;
+    edge press_2 goto s140;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "S_2")
+  location s117:
+    edge openr goto s142;
+    edge press_0;
+    edge press_2 goto s141;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "S_2")
+  location s118:
+    marked;
+    edge openr goto s140;
+    edge down goto s141;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "S_2")
+  location s119:
+    edge close goto s96;
+    edge press_0;
+    edge press_2 goto s143;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "C_0")
+  location s120:
+    edge close goto s99;
+    edge press_0;
+    edge press_2 goto s144;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "C_0")
+  location s121:
+    edge openr goto s146;
+    edge press_0;
+    edge press_2 goto s145;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "C_0")
+  location s122:
+    marked;
+    edge openr goto s144;
+    edge down goto s145;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "open", R1: "door_open", R2: "S_open_0")
+  location s123:
+    edge close goto s135;
+    edge press_0 goto s147;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "S_0")
+  location s124:
+    edge openr goto s149;
+    edge press_0 goto s148;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "S_0")
+  location s125:
+    marked;
+    edge openr goto s147;
+    edge up goto s148;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "open", R1: "door_open", R2: "S_0")
+  location s126:
+    edge close goto s101;
+    edge press_0 goto s150;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "S_open_1")
+  location s127:
+    edge close goto s152;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "S_1")
+  location s128:
+    edge openr goto s151;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s51;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "S_open_1")
+  location s129:
+    edge close goto s153;
+    edge press_0;
+    edge press_2 goto s151;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "idle")
+  location s130:
+    marked;
+    edge openr goto s154;
+    edge down goto s153;
+    edge press_0 goto s99;
+    edge press_2 goto s155;
+    edge press_1 goto s138;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "idle")
+  location s131:
+    edge close goto s105;
+    edge press_0 goto s98;
+    edge press_2 goto s95;
+    edge arrive_2 goto s154;
+    edge press_1 goto s137;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "S_open_1")
+  location s132:
+    edge close goto s157;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "S_1")
+  location s133:
+    edge openr goto s156;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s51;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "S_open_1")
+  location s134:
+    edge close goto s158;
+    edge press_0 goto s156;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "closed", R1: "door_closed", R2: "idle")
+  location s135:
+    marked;
+    edge openr goto s159;
+    edge up goto s158;
+    edge press_0 goto s34;
+    edge press_2 goto s14;
+    edge press_1 goto s10;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "idle")
+  location s136:
+    edge close goto s109;
+    edge press_0 goto s100;
+    edge press_2 goto s97;
+    edge arrive_0 goto s159;
+    edge press_1 goto s139;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "C_1")
+  location s137:
+    edge close goto s112;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s160;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "C_1")
+  location s138:
+    marked;
+    edge openr goto s160;
+    edge down goto s161;
+    edge press_0;
+    edge press_2 goto s162;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "C_1")
+  location s139:
+    edge close goto s114;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s20;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "S_open_2")
+  location s140:
+    edge close goto s152;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "S_2")
+  location s141:
+    edge openr goto s163;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s164;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "S_open_2")
+  location s142:
+    edge close goto s153;
+    edge press_0;
+    edge press_2 goto s163;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "S_2")
+  location s143:
+    edge close goto s118;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "C_0")
+  location s144:
+    edge close goto s122;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "C_0")
+  location s145:
+    edge openr goto s165;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s55;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "C_0")
+  location s146:
+    edge close goto s121;
+    edge press_0;
+    edge press_2 goto s165;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "S_open_0")
+  location s147:
+    edge close goto s157;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "S_0")
+  location s148:
+    edge openr goto s166;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s167;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "S_open_0")
+  location s149:
+    edge close goto s158;
+    edge press_0 goto s166;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "S_0")
+  location s150:
+    edge close goto s125;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "S_open_1")
+  location s151:
+    edge close goto s168;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s56;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "idle")
+  location s152:
+    marked;
+    edge openr goto s169;
+    edge down goto s168;
+    edge press_0 goto s122;
+    edge press_2 goto s155;
+    edge press_1 goto s162;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "idle")
+  location s153:
+    edge openr goto s170;
+    edge press_0 goto s121;
+    edge press_2 goto s171;
+    edge press_1 goto s161;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "idle")
+  location s154:
+    edge close goto s130;
+    edge press_0 goto s120;
+    edge press_2 goto s172;
+    edge press_1 goto s160;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "C_2")
+  location s155:
+    marked;
+    edge openr goto s172;
+    edge down goto s171;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "S_open_1")
+  location s156:
+    edge close goto s173;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s56;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "idle")
+  location s157:
+    marked;
+    edge openr goto s174;
+    edge up goto s173;
+    edge press_0 goto s34;
+    edge press_2 goto s28;
+    edge press_1 goto s22;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "idle")
+  location s158:
+    edge openr goto s175;
+    edge press_0 goto s47;
+    edge press_2 goto s27;
+    edge press_1 goto s21;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "open", R1: "door_open", R2: "idle")
+  location s159:
+    edge close goto s135;
+    edge press_0 goto s46;
+    edge press_2 goto s26;
+    edge press_1 goto s20;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "C_1")
+  location s160:
+    edge close goto s138;
+    edge press_0;
+    edge press_2 goto s176;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "C_1")
+  location s161:
+    edge openr goto s178;
+    edge press_0;
+    edge press_2 goto s177;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "C_1")
+  location s162:
+    marked;
+    edge openr goto s176;
+    edge down goto s177;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "S_open_2")
+  location s163:
+    edge close goto s168;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s179;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "S_2")
+  location s164:
+    marked;
+    edge openr goto s179;
+    edge down goto s180;
+    edge up goto s181;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s182;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "C_0")
+  location s165:
+    edge close goto s145;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s65;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "S_open_0")
+  location s166:
+    edge close goto s173;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s183;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "S_0")
+  location s167:
+    marked;
+    edge openr goto s183;
+    edge down goto s184;
+    edge up goto s185;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s186;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "idle")
+  location s168:
+    edge openr goto s187;
+    edge press_0 goto s145;
+    edge press_2 goto s171;
+    edge arrive_1 goto s74;
+    edge press_1 goto s177;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "idle")
+  location s169:
+    edge close goto s152;
+    edge press_0 goto s144;
+    edge press_2 goto s172;
+    edge press_1 goto s176;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "idle")
+  location s170:
+    edge close goto s153;
+    edge press_0 goto s146;
+    edge press_2 goto s188;
+    edge press_1 goto s178;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "C_2")
+  location s171:
+    edge openr goto s188;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s53;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "C_2")
+  location s172:
+    edge close goto s155;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "idle")
+  location s173:
+    edge openr goto s189;
+    edge press_0 goto s47;
+    edge press_2 goto s43;
+    edge arrive_1 goto s74;
+    edge press_1 goto s39;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "idle")
+  location s174:
+    edge close goto s157;
+    edge press_0 goto s46;
+    edge press_2 goto s42;
+    edge press_1 goto s38;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "idle")
+  location s175:
+    edge close goto s158;
+    edge press_0 goto s54;
+    edge press_2 goto s44;
+    edge press_1 goto s40;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "C_1")
+  location s176:
+    edge close goto s162;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "C_1")
+  location s177:
+    edge openr goto s190;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s51;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "C_1")
+  location s178:
+    edge close goto s161;
+    edge press_0;
+    edge press_2 goto s190;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "S_open_2")
+  location s179:
+    edge close goto s74;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s191;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "S_2")
+  location s180:
+    edge openr goto s195;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s192;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "S_2")
+  location s181:
+    edge openr goto s194;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s193;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "S_2")
+  location s182:
+    marked;
+    edge openr goto s191;
+    edge down goto s192;
+    edge up goto s193;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "S_open_0")
+  location s183:
+    edge close goto s74;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s196;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "S_0")
+  location s184:
+    edge openr goto s200;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s197;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "S_0")
+  location s185:
+    edge openr goto s199;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s198;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "closed", R1: "door_closed", R2: "S_0")
+  location s186:
+    marked;
+    edge openr goto s196;
+    edge down goto s197;
+    edge up goto s198;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "idle")
+  location s187:
+    edge close goto s168;
+    edge press_0 goto s165;
+    edge press_2 goto s188;
+    edge arrive_1 goto s93;
+    edge press_1 goto s190;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "C_2")
+  location s188:
+    edge close goto s171;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s61;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "idle")
+  location s189:
+    edge close goto s173;
+    edge press_0 goto s54;
+    edge press_2 goto s52;
+    edge arrive_1 goto s93;
+    edge press_1 goto s50;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "C_1")
+  location s190:
+    edge close goto s177;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s60;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "S_open_2")
+  location s191:
+    edge close goto s90;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "S_2")
+  location s192:
+    edge openr goto s202;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s203;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "S_2")
+  location s193:
+    edge openr goto s201;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s96;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "S_open_2")
+  location s194:
+    edge close goto s91;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s201;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "S_open_2")
+  location s195:
+    edge close goto s92;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s202;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor1", door: "open", R1: "door_open", R2: "S_open_0")
+  location s196:
+    edge close goto s90;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "closed", R1: "door_closed", R2: "S_0")
+  location s197:
+    edge openr goto s206;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s101;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "closed", R1: "door_closed", R2: "S_0")
+  location s198:
+    edge openr goto s204;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s205;
+    edge press_1;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "S_open_0")
+  location s199:
+    edge close goto s91;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s204;
+  @state(button_floor1: "not_called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "S_open_0")
+  location s200:
+    edge close goto s92;
+    edge press_0;
+    edge press_2;
+    edge press_1 goto s206;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "S_open_2")
+  location s201:
+    edge close goto s105;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s116;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "S_open_2")
+  location s202:
+    edge close goto s109;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s207;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "closed", R1: "door_closed", R2: "S_2")
+  location s203:
+    marked;
+    edge openr goto s207;
+    edge up goto s208;
+    edge press_0 goto s209;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_1", door: "open", R1: "door_open", R2: "S_open_0")
+  location s204:
+    edge close goto s105;
+    edge press_0;
+    edge press_2;
+    edge arrive_2 goto s210;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "S_0")
+  location s205:
+    marked;
+    edge openr goto s210;
+    edge down goto s211;
+    edge press_0;
+    edge press_2 goto s212;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_1", door: "open", R1: "door_open", R2: "S_open_0")
+  location s206:
+    edge close goto s109;
+    edge press_0;
+    edge press_2;
+    edge arrive_0 goto s123;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "ground", door: "open", R1: "door_open", R2: "S_open_2")
+  location s207:
+    edge close goto s135;
+    edge press_0 goto s213;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "S_2")
+  location s208:
+    edge openr goto s215;
+    edge press_0 goto s214;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "closed", R1: "door_closed", R2: "S_2")
+  location s209:
+    marked;
+    edge openr goto s213;
+    edge up goto s214;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "S_open_0")
+  location s210:
+    edge close goto s130;
+    edge press_0;
+    edge press_2 goto s216;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "S_0")
+  location s211:
+    edge openr goto s218;
+    edge press_0;
+    edge press_2 goto s217;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "closed", R1: "door_closed", R2: "S_0")
+  location s212:
+    marked;
+    edge openr goto s216;
+    edge down goto s217;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "ground", door: "open", R1: "door_open", R2: "S_open_2")
+  location s213:
+    edge close goto s157;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "closed", R1: "door_closed", R2: "S_2")
+  location s214:
+    edge openr goto s219;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s164;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "not_called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "S_open_2")
+  location s215:
+    edge close goto s158;
+    edge press_0 goto s219;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "floor2", door: "open", R1: "door_open", R2: "S_open_0")
+  location s216:
+    edge close goto s152;
+    edge press_0;
+    edge press_2;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "closed", R1: "door_closed", R2: "S_0")
+  location s217:
+    edge openr goto s220;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s167;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "not_called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "S_open_0")
+  location s218:
+    edge close goto s153;
+    edge press_0;
+    edge press_2 goto s220;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "up_from_0", door: "open", R1: "door_open", R2: "S_open_2")
+  location s219:
+    edge close goto s173;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s179;
+    edge press_1;
+  @state(button_floor1: "called", button_floor2: "called", button_ground: "called", cabin: "down_from_2", door: "open", R1: "door_open", R2: "S_open_0")
+  location s220:
+    edge close goto s168;
+    edge press_0;
+    edge press_2;
+    edge arrive_1 goto s183;
+    edge press_1;
+end
+svgout id "cabin" attr "transform" value if cabin.ground: "translate(0, 0)" elif cabin.floor1: "translate(0, -150)" elif cabin.floor2: "translate(0, -300)" elif cabin.up_from_0: "translate(0, -75)" elif cabin.up_from_1: "translate(0, -225)" elif cabin.down_from_1: "translate(0, -75)" elif cabin.down_from_2: "translate(0, -225)" else "translate(0, 0)" end file "elevator_svg.svg";
+svgout id "cabin_position_text" attr "textContent" value if cabin.ground: "Ground" elif cabin.floor1: "Floor 1" elif cabin.floor2: "Floor 2" else "Moving" end file "elevator_svg.svg";
+svgout id "cabin" attr "fill" value if cabin.up_from_0 or cabin.up_from_1: "#4CAF50" elif cabin.down_from_1 or cabin.down_from_2: "#FF9800" else "#2196F3" end file "elevator_svg.svg";
+svgout id "up_button" attr "opacity" value if cabin.up_from_0 or cabin.up_from_1: "1.0" else "0.5" end file "elevator_svg.svg";
+svgout id "down_button" attr "opacity" value if cabin.down_from_1 or cabin.down_from_2: "1.0" else "0.5" end file "elevator_svg.svg";
+svgout id "door" attr "fill" value if door.open: "#8B4513" else "#654321" end file "elevator_svg.svg";
+svgout id "door_status_text" attr "textContent" value if door.open: "Open" else "Closed" end file "elevator_svg.svg";
+svgout id "door_status_text" attr "fill" value if door.open: "#4CAF50" else "#F44336" end file "elevator_svg.svg";
+svgout id "door_indicator" attr "fill" value if door.open: "#4CAF50" else "#FFC107" end file "elevator_svg.svg";
+svgout id "door" attr "opacity" value if door.open: "0.7" else "1.0" end file "elevator_svg.svg";
+svgout id "open_button" attr "opacity" value if door.open: "1.0" else "0.5" end file "elevator_svg.svg";
+svgout id "close_button" attr "opacity" value if door.closed: "1.0" else "0.5" end file "elevator_svg.svg";
+svgout id "button_0" attr "fill" value if button_ground.called: "#4CAF50" else "#F44336" end file "elevator_svg.svg";
+svgout id "button_1" attr "fill" value if button_floor1.called: "#4CAF50" else "#F44336" end file "elevator_svg.svg";
+svgout id "button_2" attr "fill" value if button_floor2.called: "#4CAF50" else "#F44336" end file "elevator_svg.svg";
+svgout id "called_floors_text" attr "textContent" value if button_ground.called and button_floor1.called and button_floor2.called: "G, 1, 2" elif button_ground.called and button_floor1.called: "G, 1" elif button_ground.called and button_floor2.called: "G, 2" elif button_floor1.called and button_floor2.called: "1, 2" elif button_ground.called: "G" elif button_floor1.called: "1" elif button_floor2.called: "2" else "None" end file "elevator_svg.svg";
+svgout id "called_floors_text" attr "fill" value if button_ground.called or button_floor1.called or button_floor2.called: "#4CAF50" else "#9E9E9E" end file "elevator_svg.svg";

@@ -1,0 +1,95 @@
+<svg width="600" height="500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="500" fill="#f0f0f0"/>
+  
+  <!-- Title -->
+  <text x="300" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#333">Elevator Control System</text>
+  
+  <!-- Elevator Shaft -->
+  <rect x="50" y="70" width="200" height="320" fill="none" stroke="#333" stroke-width="2"/>
+  
+  <!-- Floor divisions -->
+  <line x1="50" y1="170" x2="250" y2="170" stroke="#666" stroke-width="1"/>
+  <line x1="50" y1="270" x2="250" y2="270" stroke="#666" stroke-width="1"/>
+  
+  <!-- Floor labels -->
+  <text x="30" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">G</text>
+  <text x="30" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">1</text>
+  <text x="30" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">2</text>
+  
+  <!-- Cabin (initially at ground floor) -->
+  <rect id="cabin" x="60" y="330" width="80" height="60" fill="#2196F3" stroke="#1976D2" stroke-width="2"/>
+  <text x="100" y="365" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">CABIN</text>
+  
+  <!-- Door (part of cabin) -->
+  <rect id="door" x="150" y="330" width="80" height="60" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+  <text x="190" y="365" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">DOOR</text>
+  
+  <!-- Door indicator -->
+  <circle id="door_indicator" cx="175" cy="345" r="4" fill="#FFC107"/>
+  
+  <!-- Call buttons -->
+  <circle id="button_0" cx="300" cy="350" r="15" fill="#F44336" stroke="#333" stroke-width="2"/>
+  <text x="300" y="355" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">G</text>
+  <text x="300" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">CALL</text>
+  
+  <circle id="button_1" cx="300" cy="250" r="15" fill="#F44336" stroke="#333" stroke-width="2"/>
+  <text x="300" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">1</text>
+  <text x="300" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">CALL</text>
+  
+  <circle id="button_2" cx="300" cy="150" r="15" fill="#F44336" stroke="#333" stroke-width="2"/>
+  <text x="300" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">2</text>
+  <text x="300" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#333">CALL</text>
+  
+  <!-- Button lights -->
+  <circle id="button_0_light" cx="320" cy="350" r="3" fill="#4CAF50" style="display: none"/>
+  <circle id="button_1_light" cx="320" cy="250" r="3" fill="#4CAF50" style="display: none"/>
+  <circle id="button_2_light" cx="320" cy="150" r="3" fill="#4CAF50" style="display: none"/>
+  
+  <!-- Control Panel -->
+  <rect x="400" y="100" width="150" height="300" fill="#37474F" stroke="#263238" stroke-width="2"/>
+  <text x="475" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">CONTROL</text>
+  
+  <!-- Cabin Position -->
+  <text x="410" y="150" font-family="Arial, sans-serif" font-size="12" fill="#B0BEC5">Cabin Position:</text>
+  <text id="cabin_position_text" x="410" y="165" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#4CAF50">
+    <tspan id="cabin_position_span">Ground</tspan>
+  </text>
+  
+  <!-- Door Status -->
+  <text x="410" y="190" font-family="Arial, sans-serif" font-size="12" fill="#B0BEC5">Door Status:</text>
+  <text id="door_status_text" x="410" y="205" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#F44336">
+    <tspan id="door_status_span">Closed</tspan>
+  </text>
+  
+  <!-- Called Floors -->
+  <text x="410" y="230" font-family="Arial, sans-serif" font-size="12" fill="#B0BEC5">Called Floors:</text>
+  <text id="called_floors_text" x="410" y="245" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#9E9E9E">
+    <tspan id="called_floors_span">None</tspan>
+  </text>
+  
+  <!-- Control Buttons -->
+  <rect id="up_button" x="410" y="270" width="30" height="25" fill="#4CAF50" stroke="#2E7D32" stroke-width="1"/>
+  <text x="425" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">UP</text>
+  
+  <rect id="down_button" x="450" y="270" width="40" height="25" fill="#FF5722" stroke="#D84315" stroke-width="1"/>
+  <text x="470" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">DOWN</text>
+  
+  <rect id="open_button" x="410" y="305" width="35" height="25" fill="#FF9800" stroke="#E65100" stroke-width="1"/>
+  <text x="427" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">OPEN</text>
+  
+  <rect id="close_button" x="455" y="305" width="35" height="25" fill="#9C27B0" stroke="#6A1B9A" stroke-width="1"/>
+  <text x="472" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">CLOSE</text>
+  
+  <!-- Legend -->
+  <text x="50" y="440" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">Legend:</text>
+  <circle cx="100" cy="460" r="8" fill="#F44336"/>
+  <text x="115" y="465" font-family="Arial, sans-serif" font-size="12" fill="#333">Not Called</text>
+  <circle cx="200" cy="460" r="8" fill="#4CAF50"/>
+  <text x="215" y="465" font-family="Arial, sans-serif" font-size="12" fill="#333">Called</text>
+  
+  <!-- Additional visual elements for floor indicators -->
+  <rect id="cabin_floor0" x="55" y="325" width="5" height="5" fill="#4CAF50" style="display: inline"/>
+  <rect id="cabin_floor1" x="55" y="225" width="5" height="5" fill="#4CAF50" style="display: none"/>
+  <rect id="cabin_floor2" x="55" y="125" width="5" height="5" fill="#4CAF50" style="display: none"/>
+</svg>

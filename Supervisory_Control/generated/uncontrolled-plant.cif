@@ -1,0 +1,92 @@
+controllable up;
+controllable down;
+controllable openr;
+controllable close;
+uncontrollable press_0;
+uncontrollable press_1;
+uncontrollable press_2;
+uncontrollable arrive_0;
+uncontrollable arrive_1;
+uncontrollable arrive_2;
+plant automaton cabin:
+  location ground:
+    initial;
+    marked;
+    edge up goto up_from_0;
+  location up_from_0:
+    edge arrive_1 goto floor1;
+  location floor1:
+    marked;
+    edge up goto up_from_1;
+    edge down goto down_from_1;
+  location up_from_1:
+    edge arrive_2 goto floor2;
+  location down_from_1:
+    edge arrive_0 goto ground;
+  location floor2:
+    marked;
+    edge down goto down_from_2;
+  location down_from_2:
+    edge arrive_1 goto floor1;
+end
+plant automaton door:
+  location closed:
+    initial;
+    marked;
+    edge openr goto open;
+  location open:
+    edge close goto closed;
+end
+plant automaton button_ground:
+  location not_called:
+    initial;
+    marked;
+    edge press_0 goto called;
+  location called:
+    marked;
+    edge press_0 goto called;
+    edge arrive_0 goto not_called;
+    edge arrive_2 goto called;
+    edge arrive_1 goto called;
+end
+plant automaton button_floor1:
+  location not_called:
+    initial;
+    marked;
+    edge press_1 goto called;
+  location called:
+    marked;
+    edge press_1 goto called;
+    edge arrive_1 goto not_called;
+    edge arrive_0 goto called;
+    edge arrive_2 goto called;
+end
+plant automaton button_floor2:
+  location not_called:
+    initial;
+    marked;
+    edge press_2 goto called;
+  location called:
+    marked;
+    edge press_2 goto called;
+    edge arrive_2 goto not_called;
+    edge arrive_0 goto called;
+    edge arrive_1 goto called;
+end
+svgout id "cabin" attr "transform" value if cabin.ground: "translate(0, 0)" elif cabin.floor1: "translate(0, -150)" elif cabin.floor2: "translate(0, -300)" elif cabin.up_from_0: "translate(0, -75)" elif cabin.up_from_1: "translate(0, -225)" elif cabin.down_from_1: "translate(0, -75)" elif cabin.down_from_2: "translate(0, -225)" else "translate(0, 0)" end file "elevator_svg.svg";
+svgout id "cabin_position_text" attr "textContent" value if cabin.ground: "Ground" elif cabin.floor1: "Floor 1" elif cabin.floor2: "Floor 2" else "Moving" end file "elevator_svg.svg";
+svgout id "cabin" attr "fill" value if cabin.up_from_0 or cabin.up_from_1: "#4CAF50" elif cabin.down_from_1 or cabin.down_from_2: "#FF9800" else "#2196F3" end file "elevator_svg.svg";
+svgout id "up_button" attr "opacity" value if cabin.up_from_0 or cabin.up_from_1: "1.0" else "0.5" end file "elevator_svg.svg";
+svgout id "down_button" attr "opacity" value if cabin.down_from_1 or cabin.down_from_2: "1.0" else "0.5" end file "elevator_svg.svg";
+svgout id "door" attr "fill" value if door.open: "#8B4513" else "#654321" end file "elevator_svg.svg";
+svgout id "door_status_text" attr "textContent" value if door.open: "Open" else "Closed" end file "elevator_svg.svg";
+svgout id "door_status_text" attr "fill" value if door.open: "#4CAF50" else "#F44336" end file "elevator_svg.svg";
+svgout id "door_indicator" attr "fill" value if door.open: "#4CAF50" else "#FFC107" end file "elevator_svg.svg";
+svgout id "door" attr "opacity" value if door.open: "0.7" else "1.0" end file "elevator_svg.svg";
+svgout id "open_button" attr "opacity" value if door.open: "1.0" else "0.5" end file "elevator_svg.svg";
+svgout id "close_button" attr "opacity" value if door.closed: "1.0" else "0.5" end file "elevator_svg.svg";
+svgout id "button_0" attr "fill" value if button_ground.called: "#4CAF50" else "#F44336" end file "elevator_svg.svg";
+svgout id "button_1" attr "fill" value if button_floor1.called: "#4CAF50" else "#F44336" end file "elevator_svg.svg";
+svgout id "button_2" attr "fill" value if button_floor2.called: "#4CAF50" else "#F44336" end file "elevator_svg.svg";
+svgout id "called_floors_text" attr "textContent" value if button_ground.called and button_floor1.called and button_floor2.called: "G, 1, 2" elif button_ground.called and button_floor1.called: "G, 1" elif button_ground.called and button_floor2.called: "G, 2" elif button_floor1.called and button_floor2.called: "1, 2" elif button_ground.called: "G" elif button_floor1.called: "1" elif button_floor2.called: "2" else "None" end file "elevator_svg.svg";
+svgout id "called_floors_text" attr "fill" value if button_ground.called or button_floor1.called or button_floor2.called: "#4CAF50" else "#9E9E9E" end file "elevator_svg.svg";

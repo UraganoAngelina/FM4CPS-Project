@@ -1,0 +1,2 @@
+controllable up, down, openr, close;
+uncontrollable press_0, press_1, press_2, arrive_0, arrive_1, arrive_2;

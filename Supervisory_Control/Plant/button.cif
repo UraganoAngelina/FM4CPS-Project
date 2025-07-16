@@ -1,0 +1,76 @@
+import "events.cif";
+
+// Button for ground floor
+plant button_ground:
+    location not_called:
+        initial;
+        marked;
+        edge press_0 goto called;
+
+    location called:
+        marked;
+        edge press_0 goto called;
+        edge arrive_0 goto not_called;
+        edge arrive_2 goto called;
+        edge arrive_1 goto called;
+
+end
+
+plant button_floor1:
+    location not_called:
+        initial;
+        marked;
+        edge press_1 goto called;
+
+    location called:
+        marked;
+        edge press_1 goto called;
+        edge arrive_1 goto not_called;
+        edge arrive_0 goto called;
+        edge arrive_2 goto called;
+end
+
+plant button_floor2:
+    location not_called:
+        initial;
+        marked;
+        edge press_2 goto called;
+
+    location called:
+        marked;
+        edge press_2 goto called;
+        edge arrive_2 goto not_called;
+        edge arrive_0 goto called;
+        edge arrive_1 goto called;
+end
+svgfile "../generated/elevator_svg.svg";
+
+// Pulsante piano terra (G)
+svgout id "button_0" attr "fill" value
+  if button_ground.called: "#4CAF50" else "#F44336" end;
+
+// Pulsante piano 1
+svgout id "button_1" attr "fill" value
+  if button_floor1.called: "#4CAF50" else "#F44336" end;
+
+// Pulsante piano 2
+svgout id "button_2" attr "fill" value
+  if button_floor2.called: "#4CAF50" else "#F44336" end;
+
+// Aggiorna il testo dei piani chiamati nel pannello
+svgout id "called_floors_text" attr "textContent" value
+  if button_ground.called and button_floor1.called and button_floor2.called: "G, 1, 2"
+  elif button_ground.called and button_floor1.called: "G, 1"
+  elif button_ground.called and button_floor2.called: "G, 2"
+  elif button_floor1.called and button_floor2.called: "1, 2"
+  elif button_ground.called: "G"
+  elif button_floor1.called: "1"
+  elif button_floor2.called: "2"
+  else "None"
+end;
+
+// Colore del testo dei piani chiamati
+svgout id "called_floors_text" attr "fill" value
+  if button_ground.called or button_floor1.called or button_floor2.called: "#4CAF50"
+  else "#9E9E9E"
+end;

@@ -1,0 +1,102 @@
+import "../Plant/events.cif";
+
+requirement R2:
+  // Stato iniziale: nessuna chiamata in corso
+  location idle:
+    initial; marked;
+    // Se premo un pulsante incontrollabile, vado in attesa di quel piano
+    edge press_0 goto C_0;
+    edge press_1 goto C_1;
+    edge press_2 goto C_2;
+    // Eventi di servizio (openr/close/arrive) devono essere ignorati in idle
+    edge arrive_0 goto idle;
+    edge arrive_1 goto idle;
+    edge arrive_2 goto idle;
+    edge openr goto idle;
+    edge close goto idle;
+
+  // In attesa del piano 0
+  location C_0:
+    marked;
+    // Arrivo effettivo  inizio servizio
+    edge arrive_0 goto S_0;
+    // Tutti gli altri eventi non cambiano stato
+    edge press_0 goto C_0;      // ridondanza
+    edge press_1 goto C_0;
+    edge press_2 goto C_0;
+    edge arrive_1 goto C_0;
+    edge arrive_2 goto C_0;
+    edge openr goto C_0;
+    edge close goto C_0;
+
+  // Servizio del piano 0: devo aprire la porta
+  location S_0:
+    marked;
+    // Solo apertura consentita
+    edge openr goto S_open_0;
+    // Tutti gli altri eventi li ignoro (ma non torco in idle!)
+    edge press_0 goto S_0;
+    edge press_1 goto S_0;
+    edge press_2 goto S_0;
+    edge arrive_0 goto S_0;
+    edge arrive_1 goto S_0;
+    edge arrive_2 goto S_0;
+    edge close goto S_0;
+
+  // Porta aperta al piano 0: devo chiudere
+  location S_open_0:
+    marked;
+    // Solo chiusura porta riporta in idle
+    edge close goto idle;
+
+    edge press_0 goto S_open_0;
+    edge press_1 goto S_open_0;
+    edge press_2 goto S_open_0;
+    edge arrive_0 goto S_open_0;
+    edge arrive_1 goto S_open_0;
+    edge arrive_2 goto S_open_0;
+    edge openr goto S_open_0;
+
+  // Stessi stati per i piani 1 e 2
+  location C_1:
+    marked;
+    edge arrive_1 goto S_1;
+    edge press_0 goto C_1; edge press_1 goto C_1; edge press_2 goto C_1;
+    edge arrive_0 goto C_1; edge arrive_2 goto C_1;
+    edge openr goto C_1; edge close goto C_1;
+
+  location S_1:
+    marked;
+    edge openr goto S_open_1;
+    edge press_0 goto S_1; edge press_1 goto S_1; edge press_2 goto S_1;
+    edge arrive_0 goto S_1; edge arrive_1 goto S_1; edge arrive_2 goto S_1;
+    edge close goto S_1;
+
+  location S_open_1:
+    marked;
+    edge close goto idle;
+    edge press_0 goto S_open_1; edge press_1 goto S_open_1; edge press_2 goto S_open_1;
+    edge arrive_0 goto S_open_1; edge arrive_1 goto S_open_1; edge arrive_2 goto S_open_1;
+    edge openr goto S_open_1;
+
+  location C_2:
+    marked;
+    edge arrive_2 goto S_2;
+    edge press_0 goto C_2; edge press_1 goto C_2; edge press_2 goto C_2;
+    edge arrive_0 goto C_2; edge arrive_1 goto C_2;
+    edge openr goto C_2; edge close goto C_2;
+
+  location S_2:
+    marked;
+    edge openr goto S_open_2;
+    edge press_0 goto S_2; edge press_1 goto S_2; edge press_2 goto S_2;
+    edge arrive_0 goto S_2; edge arrive_1 goto S_2; edge arrive_2 goto S_2;
+    edge close goto S_2;
+
+  location S_open_2:
+    marked;
+    edge close goto idle;
+    edge press_0 goto S_open_2; edge press_1 goto S_open_2; edge press_2 goto S_open_2;
+    edge arrive_0 goto S_open_2; edge arrive_1 goto S_open_2; edge arrive_2 goto S_open_2;
+    edge openr goto S_open_2;
+end
