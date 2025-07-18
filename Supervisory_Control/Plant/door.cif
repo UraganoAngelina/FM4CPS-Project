@@ -5,9 +5,15 @@ plant door:
         initial;
         marked;
         edge openr goto open;
+        edge arrive_0 goto closed;
+        edge arrive_1 goto closed;
+        edge arrive_2 goto closed;
 
     location open:
         edge close goto closed;
+         edge arrive_0 goto open;
+        edge arrive_1 goto open;
+        edge arrive_2 goto open;
 end
 
 svgfile "../generated/elevator_svg.svg";

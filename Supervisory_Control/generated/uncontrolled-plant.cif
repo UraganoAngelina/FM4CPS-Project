@@ -13,35 +13,61 @@ plant automaton cabin:
     initial;
     marked;
     edge up goto up_from_0;
+    edge arrive_0 goto ground;
+    edge arrive_1 goto ground;
+    edge arrive_2 goto ground;
   location up_from_0:
     edge arrive_1 goto floor1;
+    edge arrive_0 goto up_from_0;
+    edge arrive_2 goto up_from_0;
   location floor1:
     marked;
     edge up goto up_from_1;
     edge down goto down_from_1;
+    edge arrive_1 goto floor1;
+    edge arrive_0 goto floor1;
+    edge arrive_2 goto floor1;
   location up_from_1:
     edge arrive_2 goto floor2;
+    edge arrive_0 goto up_from_1;
+    edge arrive_1 goto up_from_1;
   location down_from_1:
     edge arrive_0 goto ground;
+    edge arrive_1 goto down_from_1;
+    edge arrive_2 goto down_from_1;
   location floor2:
     marked;
     edge down goto down_from_2;
+    edge arrive_2 goto floor2;
+    edge arrive_1 goto floor2;
+    edge arrive_0 goto floor2;
   location down_from_2:
     edge arrive_1 goto floor1;
+    edge arrive_0 goto down_from_2;
+    edge arrive_2 goto down_from_2;
 end
 plant automaton door:
   location closed:
     initial;
     marked;
     edge openr goto open;
+    edge arrive_0 goto closed;
+    edge arrive_1 goto closed;
+    edge arrive_2 goto closed;
   location open:
     edge close goto closed;
+    edge arrive_0 goto open;
+    edge arrive_1 goto open;
+    edge arrive_2 goto open;
 end
 plant automaton button_ground:
   location not_called:
     initial;
     marked;
     edge press_0 goto called;
+    edge arrive_0 goto not_called;
+    edge arrive_1 goto not_called;
+    edge arrive_2 goto not_called;
   location called:
     marked;
     edge press_0 goto called;
@@ -54,6 +80,9 @@ plant automaton button_floor1:
     initial;
     marked;
     edge press_1 goto called;
+    edge arrive_0 goto not_called;
+    edge arrive_1 goto not_called;
+    edge arrive_2 goto not_called;
   location called:
     marked;
     edge press_1 goto called;
@@ -66,6 +95,9 @@ plant automaton button_floor2:
     initial;
     marked;
     edge press_2 goto called;
+    edge arrive_0 goto not_called;
+    edge arrive_1 goto not_called;
+    edge arrive_2 goto not_called;
   location called:
     marked;
     edge press_2 goto called;
@@ -73,9 +105,9 @@ plant automaton button_floor2:
     edge arrive_0 goto called;
     edge arrive_1 goto called;
 end
-svgout id "cabin" attr "transform" value if cabin.ground: "translate(0, 0)" elif cabin.floor1: "translate(0, -150)" elif cabin.floor2: "translate(0, -300)" elif cabin.up_from_0: "translate(0, -75)" elif cabin.up_from_1: "translate(0, -225)" elif cabin.down_from_1: "translate(0, -75)" elif cabin.down_from_2: "translate(0, -225)" else "translate(0, 0)" end file "elevator_svg.svg";
+svgout id "cabin" attr "transform" value if cabin.ground: "translate(0, 0)" elif cabin.floor1: "translate(0, -135)" elif cabin.floor2: "translate(0, -235)" elif cabin.up_from_0 or cabin.down_from_1: "translate(0, -90)" elif cabin.up_from_1 or cabin.down_from_2: "translate(0, -190)" else "translate(0, 0)" end file "elevator_svg.svg";
 svgout id "cabin_position_text" attr "textContent" value if cabin.ground: "Ground" elif cabin.floor1: "Floor 1" elif cabin.floor2: "Floor 2" else "Moving" end file "elevator_svg.svg";
-svgout id "cabin" attr "fill" value if cabin.up_from_0 or cabin.up_from_1: "#4CAF50" elif cabin.down_from_1 or cabin.down_from_2: "#FF9800" else "#2196F3" end file "elevator_svg.svg";
+svgout id "cabin" attr "fill" value if cabin.up_from_0 or cabin.up_from_1 or cabin.down_from_1 or cabin.down_from_2: "#FF9800" else "#2196F3" end file "elevator_svg.svg";
 svgout id "up_button" attr "opacity" value if cabin.up_from_0 or cabin.up_from_1: "1.0" else "0.5" end file "elevator_svg.svg";
 svgout id "down_button" attr "opacity" value if cabin.down_from_1 or cabin.down_from_2: "1.0" else "0.5" end file "elevator_svg.svg";
 svgout id "door" attr "fill" value if door.open: "#8B4513" else "#654321" end file "elevator_svg.svg";

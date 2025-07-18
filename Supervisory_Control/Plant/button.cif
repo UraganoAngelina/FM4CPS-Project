@@ -6,6 +6,9 @@ plant button_ground:
         initial;
         marked;
         edge press_0 goto called;
+        edge arrive_0 goto not_called;
+        edge arrive_1 goto not_called;
+        edge arrive_2 goto not_called;
 
     location called:
         marked;
@@ -21,6 +24,9 @@ plant button_floor1:
         initial;
         marked;
         edge press_1 goto called;
+        edge arrive_0 goto not_called;
+        edge arrive_1 goto not_called;
+        edge arrive_2 goto not_called;
 
     location called:
         marked;
@@ -35,6 +41,9 @@ plant button_floor2:
         initial;
         marked;
         edge press_2 goto called;
+        edge arrive_0 goto not_called;
+        edge arrive_1 goto not_called;
+        edge arrive_2 goto not_called;
 
     location called:
         marked;

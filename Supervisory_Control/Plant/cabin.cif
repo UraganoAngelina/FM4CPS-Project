@@ -6,41 +6,79 @@ plant cabin:
         initial;
         marked;
         edge up goto up_from_0;
+        edge arrive_0 goto ground;
+        edge arrive_1 goto ground;
+        edge arrive_2 goto ground;
+
 
     location up_from_0:
         edge arrive_1 goto floor1;
+
+         edge arrive_0 goto up_from_0;
+
+        edge arrive_2 goto up_from_0;
+
 
     location floor1:
         marked;
         edge up  goto up_from_1;
         edge down goto down_from_1;
+        edge arrive_1 goto floor1;
+        edge arrive_0 goto floor1;
+        edge arrive_2 goto floor1;
+
 
     location up_from_1:
         edge arrive_2 goto floor2;
 
+        edge arrive_0 goto up_from_1;
+        edge arrive_1 goto up_from_1;
+
+
     location down_from_1:
         edge arrive_0 goto ground;
+
+
+        edge arrive_1 goto down_from_1;
+        edge arrive_2 goto down_from_1;
 
     location floor2:
         marked;
         edge down goto down_from_2;
+        edge arrive_2 goto floor2;
+        edge arrive_1 goto floor2;
+        edge arrive_0 goto floor2;
+
 
      location down_from_2:
         edge arrive_1 goto floor1;
+
+        edge arrive_0 goto down_from_2;
+
+        edge arrive_2 goto down_from_2;
+
 end
 
 svgfile "../generated/elevator_svg.svg";
 
 // Posizione della cabina - movimento verticale tra i piani
 svgout id "cabin" attr "transform" value
-  if cabin.ground: "translate(0, 0)"
-  elif cabin.floor1: "translate(0, -150)"
-  elif cabin.floor2: "translate(0, -300)"
-  elif cabin.up_from_0: "translate(0, -75)"
-  elif cabin.up_from_1: "translate(0, -225)"
-  elif cabin.down_from_1: "translate(0, -75)"
-  elif cabin.down_from_2: "translate(0, -225)"
-  else "translate(0, 0)"
+
+  if cabin.ground:
+    "translate(0, 0)"          // y=330
+  elif cabin.floor1:
+    "translate(0, -135)"       // y=220
+  elif cabin.floor2:
+    "translate(0, -235)"       // y=120
+
+  // Stati di movimento: sulla linea di mezzo
+  elif cabin.up_from_0 or cabin.down_from_1:
+    "translate(0, -90)"        // y=270
+  elif cabin.up_from_1 or cabin.down_from_2:
+    "translate(0, -190)"       // y=170
+
+  else
+    "translate(0, 0)"          // default: ground
 end;
 
 // Aggiorna il testo della posizione nel pannello di controllo
@@ -53,8 +91,7 @@ end;
 
 // Colore della cabina per indicare movimento
 svgout id "cabin" attr "fill" value
-  if cabin.up_from_0 or cabin.up_from_1: "#4CAF50"
-  elif cabin.down_from_1 or cabin.down_from_2: "#FF9800"
+  if cabin.up_from_0 or cabin.up_from_1 or cabin.down_from_1 or cabin.down_from_2: "#FF9800"
   else "#2196F3"
 end;
 
