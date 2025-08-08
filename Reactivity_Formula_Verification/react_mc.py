@@ -219,12 +219,12 @@ def construct_prefix(fsm: BddFsm, trace: List[BDD], target_state: State) -> List
     
     return path_sequence
 
-def check_react_spec(specification):
+def check_react_spec(spec):
     """
     Main function to check reactive specifications
     """
     system_model = pynusmv.glob.prop_database().master.bddFsm
-    parsing_result = parse_react(specification)
+    parsing_result = parse_react(spec)
     
     if parsing_result is None:
         return None
