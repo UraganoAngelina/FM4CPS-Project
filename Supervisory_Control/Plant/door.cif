@@ -30,10 +30,6 @@ svgout id "door_status_text" attr "textContent" value
 svgout id "door_status_text" attr "fill" value
   if door.open: "#4CAF50" else "#F44336" end;
 
-// Indicator visuale sulla porta (pallino giallo)
-svgout id "door_indicator" attr "fill" value
-  if door.open: "#4CAF50" else "#FFC107" end;
-
 // Opacity della porta per effetto apertura
 svgout id "door" attr "opacity" value
   if door.open: "0.7" else "1.0" end;
